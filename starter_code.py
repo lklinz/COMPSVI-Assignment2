@@ -32,9 +32,11 @@ def sum_list(numbers):
     # Hint: if len(numbers) == 0, return 0
     # Otherwise, return numbers[0] + sum_list(numbers[1:])
     
-    pass
+    if len(numbers)==0:
+        return 0
+    else:
+        return numbers[0] + sum_list(numbers[1:])
 
-# Uncomment to test sum_list
 # print("\nTest sum_list:")
 # print(f"  sum_list([1, 2, 3, 4]) = {sum_list([1, 2, 3, 4])} (expected: 10)")
 # print(f"  sum_list([]) = {sum_list([])} (expected: 0)")
@@ -63,7 +65,13 @@ def count_even(numbers):
     # If first number is even, add 1 to count from rest of list
     # If first number is odd, just return count from rest of list
     
-    pass
+    if len(numbers)==0:
+        return 0
+    first_num = numbers[0]
+    if first_num%2==0:
+        return 1 + count_even(numbers[1:])
+    else:
+        return count_even(numbers[1:])
 
 # Uncomment to test count_even
 # print("\nTest count_even:")
@@ -95,7 +103,13 @@ def find_strings_with(strings, target):
     # Otherwise, just return results from rest of list
     # Use: if target in strings[0]
     
-    pass
+    if len(strings) == 0:
+        return []
+    else:
+        if target in strings[0]:
+            return [strings[0]] + find_strings_with(strings[1:],target)
+        else:
+            return find_strings_with(strings[1:],target)
 
 # Uncomment to test find_strings_with
 # print("\nTest find_strings_with:")
@@ -138,7 +152,17 @@ def count_files(directory_path):
     # 3. For each item, is it a file or directory? Recursively handle directories.
     # 4. How do you combine the results?
     
-    pass
+    items = os.listdir(directory_path)
+    counts = 0
+
+    for item in items:
+        item_path = os.path.join(directory_path,item)
+
+        if os.path.isfile(item_path):
+            counts+=1
+        elif os.path.isdir(item_path):
+            counts+=count_files(item_path)
+    return counts
 
 
 # ============================================================================
@@ -174,7 +198,20 @@ def find_infected_files(directory_path, extension=".encrypted"):
     # 3. You'll need to build and return a list of matching file paths
     # 4. Use os.path.join() to create full paths
     
-    pass
+    items = os.listdir(directory_path)
+    infected_files = []
+
+    for item in items:
+        item_path = os.path.join(directory_path,item)
+
+        if os.path.isfile(item_path):
+            if item_path.endswith(extension):
+                infected_files.append(item_path)
+        elif os.path.isdir(item_path):
+            infected_subfile = find_infected_files(item_path)
+            infected_files.extend(infected_subfile)
+    return infected_files
+
 
 
 # ============================================================================
@@ -191,19 +228,22 @@ if __name__ == "__main__":
     # print("Total files (Test Case 2):", count_files("test_cases/case2_nested")) # 4
     # print("Total files (Test Case 3):", count_files("test_cases/case3_infected")) # 5
 
-    ## 2. Uncomment to run count_files for breached files
+    # ## 2. Uncomment to run count_files for breached files
     # print("Total files (breeched files):", count_files("breach_data")) # ???
 
-    ## 3. Uncomment to run tests for find_infected_files function
+    # ## 3. Uncomment to run tests for find_infected_files function
     # print("Total Infected Files (Test Case 1):", len(find_infected_files("test_cases/case1_flat"))) # 0
     # print("Total Infected Files (Test Case 1):", len(find_infected_files("test_cases/case2_nested"))) # 0
     # print("Total Infected Files (Test Case 3):", len(find_infected_files("test_cases/case3_infected"))) # 3
 
-    ## 4. Uncomment to run find_infected breached files
+    # ## 4. Uncomment to run find_infected breached files
     # print("Total Infected Files (breached files):", len(find_infected_files("breach_data"))) # ???
 
     ## 5. Determine how many files were corrupted by department (Finance, HR, and Sales)
-    
+    print("Finance", len(find_infected_files("breach_data/Finance")))
+    print("HR", len(find_infected_files("breach_data/HR")))
+    print("Sales", len(find_infected_files("breach_data/Sales")))
+    print("Sales_1", len(find_infected_files("breach_data/Sales_1")))
 
 
     
